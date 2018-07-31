@@ -1,0 +1,15 @@
+{
+    "workbench.colorTheme": "Solarized Dark",
+    "editor.minimap.enabled": false,
+    "workbench.activityBar.visible": false,
+    "workbench.statusBar.visible": false,
+    "workbench.sideBar.location": "left",
+    "workbench.colorCustomizations": {},
+    "materialTheme.accentPrevious": "",
+    "materialTheme.fixIconsRunning": false,
+    "workbench.iconTheme": "eq-material-theme-icons",
+    "materialTheme.autoApplyIcons": true,
+    "window.zoomLevel": 0,
+    "window.titleBarStyle": "custom",
+    "window.menuBarVisibility": "toggle"
+}

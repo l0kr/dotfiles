@@ -1,0 +1,16 @@
+// Place your key bindings in this file to overwrite the defaults
+[
+    {
+        "key": "ctrl+alt+w",
+        "command": "workbench.action.openGlobalSettings"
+    },
+    {
+        "key": "ctrl+alt+s",
+        "command": "-workbench.action.openGlobalSettings"
+    },
+    {
+        "key": "ctrl+shift+u",
+        "command": "editor.action.transformToUppercase",
+        "when": "editorTextFocus"
+    }
+]

@@ -23,9 +23,10 @@ set termguicolors
 " Without this autocommands in metalz that deal with filetypes prohibit 
 " messages from being shown... since we heavly realy in this, this must be set
 set shortmess-=F
+
 call plug#begin('~/.vim/plugged')
 
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+"Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'jremmen/vim-ripgrep'
 Plug 'tpope/vim-fugitive'
 Plug 'vim-utils/vim-man'
@@ -37,6 +38,7 @@ Plug 'sjl/badwolf'
 Plug 'reewr/vim-monokai-phoenix'
 Plug 'sickill/vim-monokai'
 Plug 'lokaltog/vim-monotone'
+Plug 'gruvbox-community/gruvbox'
 Plug 'mhartington/oceanic-next'
 Plug 'rhysd/vim-gfm-syntax'
 Plug 'cespare/vim-toml'
@@ -56,16 +58,10 @@ Plug 'scalameta/nvim-metals'
 " Sneaky snek time 
 Plug 'ambv/black'
 Plug 'ThePrimeagen/vim-be-good'
-Plug ''
 
 call plug#end()
-let ayucolor="light"  " for light version of theme
-let ayucolor="mirage" " for mirage version of theme
-let ayucolor="dark"   " for dark version of theme
 colorscheme badwolf
-
 let mapleader = " "
-
 lua require'lspconfig'.pyright.setup{on_attach=require'completion'.on_attach}
 
 "Credit joshdick
@@ -85,15 +81,17 @@ if (empty($TMUX))
   endif
 endif
 
+"
+":lua <<EOF
+"require'nvim-treesitter.configs'.setup {
+"  ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+"  highlight = {
+"    enable = true,              -- false will disable the whole extension
+"    disable = { "c" },  -- list of language that will be disabled
+"  },
+"}
+"
 :lua <<EOF
-require'nvim-treesitter.configs'.setup {
-  ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
-  highlight = {
-    enable = true,              -- false will disable the whole extension
-    disable = { "c" },  -- list of language that will be disabled
-  },
-}
-
 local actions = require('telescope.actions')
 require('telescope').setup {
     defaults = {

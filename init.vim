@@ -25,7 +25,8 @@ set termguicolors
 set shortmess-=F
 
 set clipboard+=unnamedplus
-
+" abbreviation for inserting current date
+iab <expr> dts strftime("%c")
 " WSL yank support
 let s:clip = '/mnt/c/Windows/System32/clip.exe'  " change this path according to your mount point
 if executable(s:clip)
@@ -46,6 +47,8 @@ Plug 'junegunn/goyo.vim'
 Plug 'rakr/vim-one'
 Plug 'ayu-theme/ayu-vim'
 Plug 'sjl/badwolf'
+Plug 'gruvbox-community/gruvbox'
+Plug 'tomasr/molokai'
 Plug 'reewr/vim-monokai-phoenix'
 Plug 'sickill/vim-monokai'
 Plug 'lokaltog/vim-monotone'
@@ -53,6 +56,7 @@ Plug 'gruvbox-community/gruvbox'
 Plug 'mhartington/oceanic-next'
 Plug 'rhysd/vim-gfm-syntax'
 Plug 'cespare/vim-toml'
+Plug 'preservim/nerdcommenter'
 
 " Telescopic Johnson appears
 Plug 'nvim-lua/popup.nvim'
@@ -71,7 +75,7 @@ Plug 'ambv/black'
 Plug 'ThePrimeagen/vim-be-good'
 
 call plug#end()
-colorscheme badwolf
+colorscheme molokai
 let mapleader = " "
 lua require'lspconfig'.pyright.setup{on_attach=require'completion'.on_attach}
 

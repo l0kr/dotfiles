@@ -16,7 +16,7 @@ set undofile
 set incsearch
 set scrolloff=200
 set relativenumber
-
+let mapleader = " "
 set colorcolumn=80
 highlight ColorColumn ctermbg=0 guibg=lightgrey
 set termguicolors
@@ -44,6 +44,10 @@ Plug 'tpope/vim-fugitive'
 Plug 'vim-utils/vim-man'
 Plug 'mbbill/undotree'
 Plug 'junegunn/goyo.vim'
+Plug 'junegunn/limelight.vim'
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
+
+" Themes
 Plug 'rakr/vim-one'
 Plug 'ayu-theme/ayu-vim'
 Plug 'sjl/badwolf'
@@ -54,6 +58,9 @@ Plug 'sickill/vim-monokai'
 Plug 'lokaltog/vim-monotone'
 Plug 'gruvbox-community/gruvbox'
 Plug 'mhartington/oceanic-next'
+Plug 'huyvohcmc/atlas.vim'
+Plug 'fxn/vim-monochrome'
+
 Plug 'rhysd/vim-gfm-syntax'
 Plug 'cespare/vim-toml'
 Plug 'preservim/nerdcommenter'
@@ -75,9 +82,9 @@ Plug 'ambv/black'
 Plug 'ThePrimeagen/vim-be-good'
 
 call plug#end()
-colorscheme molokai
-let mapleader = " "
 lua require'lspconfig'.pyright.setup{on_attach=require'completion'.on_attach}
+
+colorscheme molokai
 
 "Credit joshdick
 "Use 24-bit (true-color) mode in Vim/Neovim when outside tmux.

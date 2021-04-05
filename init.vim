@@ -17,8 +17,10 @@ set incsearch
 set scrolloff=200
 set relativenumber
 let mapleader = " "
+set autowrite
+
 set colorcolumn=80
-highlight ColorColumn ctermbg=0 guibg=lightgrey
+highlight ColorColumn ctermbg=0 guibg=NONE
 set termguicolors
 " Without this autocommands in metalz that deal with filetypes prohibit 
 " messages from being shown... since we heavly realy in this, this must be set
@@ -38,7 +40,7 @@ endif
 
 call plug#begin('~/.vim/plugged')
 
-"Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'jremmen/vim-ripgrep'
 Plug 'tpope/vim-fugitive'
 Plug 'vim-utils/vim-man'
@@ -55,11 +57,13 @@ Plug 'gruvbox-community/gruvbox'
 Plug 'tomasr/molokai'
 Plug 'reewr/vim-monokai-phoenix'
 Plug 'sickill/vim-monokai'
+Plug 'vectorstorm/vim-chlordane'
 Plug 'lokaltog/vim-monotone'
 Plug 'gruvbox-community/gruvbox'
 Plug 'mhartington/oceanic-next'
 Plug 'huyvohcmc/atlas.vim'
 Plug 'fxn/vim-monochrome'
+Plug 'tomasr/molokai'
 
 Plug 'rhysd/vim-gfm-syntax'
 Plug 'cespare/vim-toml'
@@ -103,17 +107,16 @@ if (empty($TMUX))
   endif
 endif
 
-"
-":lua <<EOF
-"require'nvim-treesitter.configs'.setup {
-"  ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
-"  highlight = {
-"    enable = true,              -- false will disable the whole extension
-"    disable = { "c" },  -- list of language that will be disabled
-"  },
-"}
-"
+
 :lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+  highlight = {
+    enable = true,              -- false will disable the whole extension
+    disable = { "c" },  -- list of language that will be disabled
+  },
+}
+
 local actions = require('telescope.actions')
 require('telescope').setup {
     defaults = {

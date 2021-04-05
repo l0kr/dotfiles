@@ -1,0 +1,7 @@
+set clipboard=unnamedplus
+let mapleader = " "
+set number relativenumber
+set nu rnu
+set NERDTree
+
+:map <Leader>b <Action>(ToggleLineBreakpoint)

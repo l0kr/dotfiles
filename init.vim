@@ -2,6 +2,7 @@ syntax on
 set exrc
 set noerrorbells
 set tabstop=4 softtabstop=4
+set shiftwidth=4
 set expandtab
 set nohlsearch
 set scrolloff=8
@@ -29,6 +30,7 @@ set shortmess-=F
 set clipboard+=unnamedplus
 " abbreviation for inserting current date
 iab <expr> dts strftime("%c")
+
 " WSL yank support
 let s:clip = '/mnt/c/Windows/System32/clip.exe'  " change this path according to your mount point
 if executable(s:clip)
@@ -79,14 +81,20 @@ Plug 'glepnir/galaxyline.nvim' , {'branch': 'main'}
 Plug 'kyazdani42/nvim-web-devicons'
 " Lsp gang
 Plug 'neovim/nvim-lspconfig'
-Plug 'nvim-lua/completion-nvim'
+Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-cmdline'
+Plug 'hrsh7th/nvim-cmp'
+
 Plug 'scalameta/nvim-metals'
 " Sneaky snek time 
 Plug 'ambv/black'
 Plug 'ThePrimeagen/vim-be-good'
 
 call plug#end()
-lua require'lspconfig'.pyright.setup{on_attach=require'completion'.on_attach}
+"lua require'lspconfig'.pyright.setup{on_attach=require'completion'.on_attach}
 
 colorscheme molokai
 
@@ -128,6 +136,8 @@ require('telescope').setup {
         grep_previewer   = require('telescope.previewers').vim_buffer_vimgrep.new,
         qflist_previewer = require('telescope.previewers').vim_buffer_qflist.new,
 
+        file_ignore_patterns = {"bloop","metals"},
+
         mappings = {
             i = {
                 ["<C-x>"] = false,
@@ -146,3 +156,68 @@ require('telescope').setup {
 require('telescope').load_extension('fzy_native')
 
 EOF
+
+
+" Cmp setup
+
+lua <<EOF
+  -- Setup nvim-cmp.
+  local cmp = require'cmp'
+
+  cmp.setup({
+ --   snippet = {
+ --     -- REQUIRED - you must specify a snippet engine
+ --     expand = function(args)
+ --       vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+ --       -- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+ --       -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+ --       -- require'snippy'.expand_snippet(args.body) -- For `snippy` users.
+ --     end,
+ --   },
+    mapping = {
+      ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
+      ['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
+      ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
+      ['<C-y>'] = cmp.config.disable, -- Specify `cmp.config.disable` if you want to remove the default `<C-y>` mapping.
+      ['<C-e>'] = cmp.mapping({
+        i = cmp.mapping.abort(),
+        c = cmp.mapping.close(),
+      }),
+      ['<CR>'] = cmp.mapping.confirm({ select = true }),
+    },
+    sources = cmp.config.sources({
+      { name = 'nvim_lsp' },
+      -- { name = 'vsnip' }, -- For vsnip users.
+      -- { name = 'luasnip' }, -- For luasnip users.
+      -- { name = 'ultisnips' }, -- For ultisnips users.
+      -- { name = 'snippy' }, -- For snippy users.
+    }, {
+      { name = 'buffer' },
+    })
+  })
+
+  -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
+  cmp.setup.cmdline('/', {
+    sources = {
+      { name = 'buffer' }
+    }
+  })
+
+  -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+  cmp.setup.cmdline(':', {
+    sources = cmp.config.sources({
+      { name = 'path' }
+    }, {
+      { name = 'cmdline' }
+    })
+  })
+
+  -- Setup lspconfig.
+  local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+  -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
+  -- require('lspconfig')['metals'].setup {
+    -- capabilities = capabilities
+  -- }
+EOF
+
+

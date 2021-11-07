@@ -51,6 +51,10 @@ let g:metals_server_version = '0.9.8+10-334e402e-SNAPSHOT'
     require'completion'.on_attach();
   end
 
+  local capabilities = vim.lsp.protocol.make_client_capabilities()
+
+  metals_config.capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
+
   metals_config.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
     vim.lsp.diagnostic.on_publish_diagnostics, {
       virtual_text = {

@@ -2,7 +2,6 @@ syntax on
 set exrc
 set noerrorbells
 set tabstop=4 softtabstop=4
-set shiftwidth=4
 set expandtab
 set nohlsearch
 set scrolloff=8
@@ -30,7 +29,6 @@ set shortmess-=F
 set clipboard+=unnamedplus
 " abbreviation for inserting current date
 iab <expr> dts strftime("%c")
-
 " WSL yank support
 let s:clip = '/mnt/c/Windows/System32/clip.exe'  " change this path according to your mount point
 if executable(s:clip)
@@ -43,7 +41,7 @@ endif
 call plug#begin('~/.vim/plugged')
 
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'jremmen/vim-ripgrep'
+Plug 'nvim-treesitter/playground'
 Plug 'tpope/vim-fugitive'
 Plug 'vim-utils/vim-man'
 Plug 'mbbill/undotree'
@@ -61,15 +59,16 @@ Plug 'reewr/vim-monokai-phoenix'
 Plug 'sickill/vim-monokai'
 Plug 'vectorstorm/vim-chlordane'
 Plug 'lokaltog/vim-monotone'
-Plug 'gruvbox-community/gruvbox'
 Plug 'mhartington/oceanic-next'
 Plug 'huyvohcmc/atlas.vim'
 Plug 'fxn/vim-monochrome'
 Plug 'tomasr/molokai'
+Plug 'wuelnerdotexe/vim-enfocado'
 
 Plug 'rhysd/vim-gfm-syntax'
 Plug 'cespare/vim-toml'
 Plug 'preservim/nerdcommenter'
+Plug 'mhinz/vim-startify'
 
 " Telescopic Johnson appears
 Plug 'nvim-lua/popup.nvim'
@@ -87,17 +86,20 @@ Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/nvim-cmp'
-
-Plug 'scalameta/nvim-metals'
+Plug 'onsails/lspkind-nvim'
+"vsnip
+Plug 'hrsh7th/cmp-vsnip'
+Plug 'hrsh7th/vim-vsnip'
 " Sneaky snek time 
 Plug 'ambv/black'
 Plug 'ThePrimeagen/vim-be-good'
+" Metalz
+Plug 'scalameta/nvim-metals'
 
 call plug#end()
-"lua require'lspconfig'.pyright.setup{on_attach=require'completion'.on_attach}
 
-colorscheme molokai
-
+colorscheme gruvbox
+"hi Normal guibg=NONE ctermbg=NONE
 "Credit joshdick
 "Use 24-bit (true-color) mode in Vim/Neovim when outside tmux.
 "If you're using tmux version 2.2 or later, you can remove the outermost $TMUX check and use tmux's 24-bit color support
@@ -124,6 +126,22 @@ require'nvim-treesitter.configs'.setup {
     disable = { "c" },  -- list of language that will be disabled
   },
 }
+local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
+vim.treesitter.require_language("scala", "/home/zepp/.tree-sitter/bin/scala.so")
+vim.treesitter.require_language("astro", "/home/zepp/.tree-sitter/bin/astro.so")
+parser_config.scala = {
+        install_info = {
+                url = "~/code/tree-sitter-scala",
+                files = {"src/parser.c"}
+                },
+        }
+
+parser_config.astro = {
+        install_info = {
+                url = "~/code/tree-sitter-astro",
+                files = {"src/parser.c"}
+                },
+        }
 
 local actions = require('telescope.actions')
 require('telescope').setup {
@@ -135,8 +153,6 @@ require('telescope').setup {
         file_previewer   = require('telescope.previewers').vim_buffer_cat.new,
         grep_previewer   = require('telescope.previewers').vim_buffer_vimgrep.new,
         qflist_previewer = require('telescope.previewers').vim_buffer_qflist.new,
-
-        file_ignore_patterns = {"bloop","metals"},
 
         mappings = {
             i = {
@@ -157,23 +173,26 @@ require('telescope').load_extension('fzy_native')
 
 EOF
 
-
 " Cmp setup
 
 lua <<EOF
   -- Setup nvim-cmp.
   local cmp = require'cmp'
+  local lspkind = require('lspkind')
 
-  cmp.setup({
- --   snippet = {
- --     -- REQUIRED - you must specify a snippet engine
- --     expand = function(args)
- --       vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
- --       -- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
- --       -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
- --       -- require'snippy'.expand_snippet(args.body) -- For `snippy` users.
- --     end,
- --   },
+cmp.setup({
+    snippet = {
+      -- REQUIRED - you must specify a snippet engine
+      expand = function(args)
+        vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+        -- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+        -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
+        -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+      end,
+    },
+    formatting = {
+        format = lspkind.cmp_format({with_text = false, maxwidth = 50})
+        },
     mapping = {
       ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
       ['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
@@ -183,11 +202,14 @@ lua <<EOF
         i = cmp.mapping.abort(),
         c = cmp.mapping.close(),
       }),
-      ['<CR>'] = cmp.mapping.confirm({ select = true }),
+      ['<CR>'] = cmp.mapping.confirm({
+      behavior = cmp.ConfirmBehavior.Replace,
+      select = true 
+      }),
     },
     sources = cmp.config.sources({
       { name = 'nvim_lsp' },
-      -- { name = 'vsnip' }, -- For vsnip users.
+      { name = 'vsnip' }, -- For vsnip users.
       -- { name = 'luasnip' }, -- For luasnip users.
       -- { name = 'ultisnips' }, -- For ultisnips users.
       -- { name = 'snippy' }, -- For snippy users.

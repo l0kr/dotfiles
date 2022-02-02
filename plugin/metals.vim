@@ -38,7 +38,7 @@ let g:metals_server_version = '0.9.8+10-334e402e-SNAPSHOT'
 " nvim-metals setup with a few additions such as nvim-completions
 "-----------------------------------------------------------------------------
 :lua << EOF
-  metals_config = require'metals'.bare_config
+  metals_config = require'metals'.bare_config()
   metals_config.settings = {
      showImplicitArguments = true,
      excludedPackages = {
